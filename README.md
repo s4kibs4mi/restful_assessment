@@ -4,8 +4,20 @@
 
 ```
 git clone https://github.com/s4kibs4mi/restful_assessment.git
-./gradlew distDocker
-docker run ninja.sakib.restful_assessment:$version
+```
+Move to root of project and execute,
+```
+docker build -t repository_name:tag_name .
+```
+then run docker,
+```
+docker run -p 8080:4567 repository_name:tag_name
+```
+
+Or get it from docker hub,
+```
+docker pull sakibsami/restful_assessment:2.7
+docker run -p 8080:4567 sakibsami/restful_assessment:2.7
 ```
 
 ##### Run with jar
