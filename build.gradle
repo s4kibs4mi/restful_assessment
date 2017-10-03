@@ -1,5 +1,5 @@
 group 'ninja.sakib.restful_assessment'
-version '1.0'
+version '1.1'
 
 apply plugin: 'java'
 apply plugin: 'docker'
@@ -25,6 +25,7 @@ task nginxDocker(type: Docker) {
     runCommand 'echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list'
     runCommand "apt-get update"
     runCommand "apt-get install -y inotify-tools nginx apache2 openssh-server"
+    runCommand "apt-get install openjdk-8-jre"
 }
 
 repositories {
