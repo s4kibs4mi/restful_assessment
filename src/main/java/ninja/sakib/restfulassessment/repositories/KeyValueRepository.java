@@ -2,6 +2,7 @@ package ninja.sakib.restfulassessment.repositories;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
+import ninja.sakib.restfulassessment.caches.CacheManager;
 import ninja.sakib.restfulassessment.daos.MongoDao;
 import ninja.sakib.restfulassessment.models.KeyValue;
 import spark.Request;
@@ -17,20 +18,27 @@ public class KeyValueRepository {
         JsonObject result = new JsonObject();
         try {
             String params = req.queryParams("keys");
-            String keys[] = params.split(",");
-            if (params != null && !params.trim().isEmpty()) {
-                for (String key : keys) {
-                    KeyValue value = MongoDao.getInstance().find(key);
-                    if (value != null) {
+            String cachePathInfo = req.pathInfo() + params;
+            String cacheValue = CacheManager.get().get(cachePathInfo);
+            if (cachePathInfo == null && !cacheValue.trim().isEmpty()) {
+                String keys[] = params.split(",");
+                if (params != null && !params.trim().isEmpty()) {
+                    for (String key : keys) {
+                        KeyValue value = MongoDao.getInstance().find(key);
+                        if (value != null) {
+                            result.add(value.getKey(), value.getValue());
+                        }
+                    }
+                } else {
+                    Iterator<KeyValue> iterator = MongoDao.getInstance().find();
+                    while (iterator.hasNext()) {
+                        KeyValue value = iterator.next();
                         result.add(value.getKey(), value.getValue());
                     }
                 }
+                CacheManager.get().set(cachePathInfo, result.toString(), 5);    // Cache available time 5s
             } else {
-                Iterator<KeyValue> iterator = MongoDao.getInstance().find();
-                while (iterator.hasNext()) {
-                    KeyValue value = iterator.next();
-                    result.add(value.getKey(), value.getValue());
-                }
+                result = Json.parse(cacheValue).asObject();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
