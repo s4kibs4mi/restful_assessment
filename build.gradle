@@ -1,5 +1,5 @@
 group 'ninja.sakib.restful_assessment'
-version '1.2'
+version '1.3'
 
 apply plugin: 'java'
 apply plugin: 'docker'
@@ -25,6 +25,17 @@ task nginxDocker(type: Docker) {
     runCommand "apt-get update"
     runCommand "apt-get install -y inotify-tools nginx apache2 openssh-server"
     runCommand "apt-get install openjdk-8-jre"
+}
+
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes("Main-Class": "ninja.sakib.restfulassessment.Run")
+    }
 }
 
 repositories {
