@@ -41,6 +41,13 @@ public class MongoDao {
         datastore.update(query, updateOperations);
     }
 
+    public void remove(KeyValue value) {
+        Query<KeyValue> query = datastore.createQuery(KeyValue.class)
+                .field("key")
+                .equal(value.getKey());
+        datastore.delete(query);
+    }
+
     public Iterator<KeyValue> find() {
         return datastore.find(KeyValue.class)
                 .iterator();

@@ -6,6 +6,7 @@ import ninja.sakib.restfulassessment.caches.CacheManager;
 import ninja.sakib.restfulassessment.daos.MongoDao;
 import ninja.sakib.restfulassessment.models.KeyValue;
 import ninja.sakib.restfulassessment.utils.LogUtil;
+import org.joda.time.DateTime;
 import spark.Request;
 import spark.Response;
 
@@ -60,6 +61,7 @@ public class KeyValueRepository {
                     KeyValue value = new KeyValue();
                     value.setKey(key);
                     value.setValue(keyValues.getString(key, ""));
+                    value.setTime(DateTime.now().toDate());
 
                     if (!value.getKey().trim().isEmpty() && !value.getValue().trim().isEmpty()) {
                         if (!MongoDao.getInstance().isExists(value.getKey())) {
