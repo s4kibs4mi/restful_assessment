@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonObject;
 import ninja.sakib.restfulassessment.caches.CacheManager;
 import ninja.sakib.restfulassessment.daos.MongoDao;
 import ninja.sakib.restfulassessment.models.KeyValue;
+import ninja.sakib.restfulassessment.utils.LogUtil;
 import spark.Request;
 import spark.Response;
 
@@ -20,7 +21,7 @@ public class KeyValueRepository {
             String params = req.queryParams("keys");
             String cachePathInfo = req.pathInfo() + params;
             String cacheValue = CacheManager.get().get(cachePathInfo);
-            if (cachePathInfo == null && !cacheValue.trim().isEmpty()) {
+            if (cacheValue == null || cacheValue.trim().isEmpty()) {
                 String keys[] = params.split(",");
                 if (params != null && !params.trim().isEmpty()) {
                     for (String key : keys) {
@@ -36,9 +37,11 @@ public class KeyValueRepository {
                         result.add(value.getKey(), value.getValue());
                     }
                 }
-                CacheManager.get().set(cachePathInfo, result.toString(), 5);    // Cache available time 5s
+                CacheManager.get().set(cachePathInfo, result.toString(), 10);    // Cache available time 10s
+                LogUtil.log("From Database");
             } else {
                 result = Json.parse(cacheValue).asObject();
+                LogUtil.log("From cache");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
