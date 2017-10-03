@@ -1,6 +1,6 @@
 # Restful Assessment
 
-Run with docker
+##### Run with docker
 
 ```
 git clone https://github.com/s4kibs4mi/restful_assessment.git
@@ -8,7 +8,7 @@ git clone https://github.com/s4kibs4mi/restful_assessment.git
 docker run ninja.sakib.restful_assessment:$version
 ```
 
-Run with jar
+##### Run with jar
 
 Install java in your system
 [Download JAR from here](https://github.com/s4kibs4mi/restful_assessment/releases/download/1.3/restful_assessment-1.3.jar)
