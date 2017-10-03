@@ -7,10 +7,35 @@ import ninja.sakib.restfulassessment.models.KeyValue;
 import spark.Request;
 import spark.Response;
 
+import java.util.Iterator;
+
 public class KeyValueRepository {
 
     public static String getValues(Request req, Response resp) {
-        return "";
+        resp.header("content-type", "application/json");
+
+        JsonObject result = new JsonObject();
+        try {
+            String params = req.queryParams("keys");
+            String keys[] = params.split(",");
+            if (params != null && !params.trim().isEmpty()) {
+                for (String key : keys) {
+                    KeyValue value = MongoDao.getInstance().find(key);
+                    if (value != null) {
+                        result.add(value.getKey(), value.getValue());
+                    }
+                }
+            } else {
+                Iterator<KeyValue> iterator = MongoDao.getInstance().find();
+                while (iterator.hasNext()) {
+                    KeyValue value = iterator.next();
+                    result.add(value.getKey(), value.getValue());
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result.toString();
     }
 
     public static String createOrUpdateValues(Request req, Response resp) {
