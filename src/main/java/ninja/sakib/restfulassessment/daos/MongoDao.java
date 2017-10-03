@@ -4,6 +4,8 @@ import com.mongodb.MongoClient;
 import ninja.sakib.restfulassessment.models.KeyValue;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.Iterator;
 
@@ -31,7 +33,12 @@ public class MongoDao {
     }
 
     public void update(KeyValue value) {
-
+        Query<KeyValue> query = datastore.createQuery(KeyValue.class)
+                .field("key")
+                .equal(value.getKey());
+        UpdateOperations<KeyValue> updateOperations = datastore.createUpdateOperations(KeyValue.class);
+        updateOperations.set("value", value.getValue());
+        datastore.update(query, updateOperations);
     }
 
     public Iterator<KeyValue> find() {
@@ -44,5 +51,9 @@ public class MongoDao {
                 .field("key")
                 .equal(key)
                 .get();
+    }
+
+    public boolean isExists(String key) {
+        return find(key) != null;
     }
 }
