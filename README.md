@@ -83,4 +83,4 @@ or
 }
 ```
 
-Note : Redis used for data caching. In get request result will be cached for 10seconds.
+Note : MongoDB used to store data & Redis used for data caching. In get request result will be cached for 10seconds.
