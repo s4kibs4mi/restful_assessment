@@ -1,5 +1,5 @@
 group 'ninja.sakib.restful_assessment'
-version '1.1'
+version '1.2'
 
 apply plugin: 'java'
 apply plugin: 'docker'
@@ -16,8 +16,7 @@ buildscript {
 }
 
 docker {
-    baseImage "ubuntu"
-    maintainer 'Guillaume J. Charmes "guillaume@dotcloud.com"'
+    baseImage "openjdk:8"
 }
 
 task nginxDocker(type: Docker) {
